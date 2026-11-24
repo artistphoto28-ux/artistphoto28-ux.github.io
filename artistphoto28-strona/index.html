@@ -273,8 +273,9 @@ footer summary{cursor:pointer}
 {
 /* ====== USTAWIENIA – edytuj tutaj ====== */
 const EMAIL = 'artistphoto28@gmail.com';
-// Wysyłka formularza przez FormSubmit (darmowe). Przy pierwszym zapytaniu przyjdzie mail z prośbą o potwierdzenie – kliknij link.
-const FORM_ENDPOINT = 'https://formsubmit.co/ajax/' + EMAIL;
+// Wysyłka formularza przez Web3Forms (darmowe). Zapytania przychodzą na artistphoto28@gmail.com.
+const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
+const WEB3FORMS_KEY = '6efd1f5c-38dc-4723-a8fb-09175ee7c7d2';
 const DNI_DO_PRZODU = 14;
 const GODZINY = ['12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
 // Zajęte terminy: 'RRRR-MM-DD': ['godzina', ...]. Cały dzień zajęty: 'RRRR-MM-DD': 'all'
@@ -437,7 +438,8 @@ function messageText(){
 }
 async function send(){
   const st=$('#status'),btn=$('#send');btn.disabled=true;st.className='status show';st.textContent=ui('sending');
-  const body={_subject:`${ui('subj')}: ${key(sel.day)} ${sel.hour}`,_template:'table',termin:`${key(sel.day)} ${sel.hour}`,rodzaj:TYPES.pl[sel.type],imie:$('#fName').value.trim(),kontakt:$('#fContact').value.trim(),wiadomosc:$('#fMsg').value.trim(),_honey:document.querySelector('[name=_honey]').value};
+  const kontakt=$('#fContact').value.trim();
+  const body={access_key:WEB3FORMS_KEY,subject:`${ui('subj')}: ${key(sel.day)} ${sel.hour}`,from_name:'Strona Artistphoto28',...(kontakt.includes('@')?{replyto:kontakt}:{}),termin:`${key(sel.day)} ${sel.hour}`,rodzaj:TYPES.pl[sel.type],imie:$('#fName').value.trim(),kontakt:$('#fContact').value.trim(),wiadomosc:$('#fMsg').value.trim(),botcheck:document.querySelector('[name=_honey]').value};
   try{
     const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body)});
     const j=await r.json().catch(()=>({}));
