@@ -108,6 +108,9 @@ label.ok input{width:20px;min-height:20px;margin-top:2px;accent-color:var(--acc)
 .status.show{display:block}
 .status pre{white-space:pre-wrap;font:13px/1.5 "JetBrains Mono",monospace;background:var(--bg);padding:12px;margin:12px 0}
 .status .row{display:flex;gap:10px;flex-wrap:wrap}
+.gcal{margin-top:24px;background:#fff;border-radius:8px;overflow:hidden;max-width:1100px}
+.gcal iframe{display:block;width:100%;height:720px;border:0}
+@media(max-width:700px){.gcal iframe{height:980px}}
 
 /* about */
 .about .wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:center}
@@ -202,14 +205,10 @@ footer summary{cursor:pointer}
   <div class="wrap">
     <div class="mono" data-t="bookKicker">Rezerwacja</div>
     <h2 data-t="bookTitle">Wybierz dzień i godzinę</h2>
-    <p style="max-width:60ch;color:#cfcdc8" data-t="bookLead">Zaznacz termin, który Ci pasuje. Zajęte godziny są przekreślone. Termin potwierdzam odpowiedzią na maila lub wiadomość.</p>
-
-    <div class="mono step" data-t="step1">1. Dzień</div>
-    <div class="days" id="days"></div>
-    <div class="mono step" data-t="step2">2. Godzina</div>
-    <div class="hours" id="hours"></div>
-    <div class="mono step" data-t="step3">3. Rodzaj sesji i Twoje dane</div>
-    <div class="types" id="types"></div>
+    <p style="max-width:60ch;color:#cfcdc8" data-t="bookLead">Wybierz wolny termin w kalendarzu poniżej. Rezerwacja od razu trafia do mojego kalendarza, a Ty dostajesz potwierdzenie mailem. Miejsce i szczegóły ustalimy po rezerwacji.</p>
+    <div class="gcal"><iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1T31fNGKITScYY12Bf3GmWYA6xmDTLjDJyB5eb00q54_aLpOUVw0jwPDN6CBczv7mByYdd33mK?gv=true" title="Kalendarz rezerwacji" loading="lazy"></iframe></div>
+    <p class="mono" style="margin-top:12px"><a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1T31fNGKITScYY12Bf3GmWYA6xmDTLjDJyB5eb00q54_aLpOUVw0jwPDN6CBczv7mByYdd33mK" target="_blank" rel="noopener" data-t="gcalLink">Kalendarz się nie wyświetla? Otwórz go w nowym oknie</a></p>
+    <h3 style="margin-top:44px" data-t="askTitle">Koncert, festiwal albo pytanie? Napisz</h3>
 
     <form class="form" id="bookForm" novalidate>
       <input id="fName" name="imie" autocomplete="name" required data-ph="phName" placeholder="Imię">
@@ -353,7 +352,7 @@ const T = {
   heroArtists:'In 2026: Kult, Swae Lee, Peja & crew, Joost Klein',heroBtn1:'See my work',heroBtn2:'Ask about a session or gig',
   worksKicker:'Contact sheet',worksTitle:'Selected work',offerKicker:'Services',offerTitle:'What I can photograph for you',
   offerNote:'Prices are indicative; I give a final quote once we agree the details (time, number of photos, travel).',
-  bookKicker:'Booking',bookTitle:'Pick a day and time',bookLead:'Choose a slot that suits you. Taken hours are crossed out. I confirm the booking by replying to your email or message.',
+  bookKicker:'Booking',bookTitle:'Pick a day and time',bookLead:'Pick a free slot in the calendar below. The booking goes straight into my calendar and you get a confirmation email. We will agree the place and details afterwards.',gcalLink:'Calendar not showing? Open it in a new window',askTitle:'Concert, festival or a question? Write to me',
   step1:'1. Day',step2:'2. Time',step3:'3. Session type and your details',phName:'Name',phContact:'Phone or email',phMsg:'Location, number of people, ideas (optional)',
   consent:'I agree to my data being used to reply to this enquiry (details in the footer: Privacy).',sendBtn:'Send enquiry',
   aboutKicker:'About',aboutTitle:'Hi, I’m Wiktor',
@@ -411,35 +410,32 @@ function hourState(d,h){
   return 'free';
 }
 const freeCount=d=>GODZINY.filter(h=>hourState(d,h)==='free').length;
-function renderDays(){
+function renderDays(){if(!$('#days'))return;
   const loc=lang==='pl'?'pl-PL':'en-GB';
   if(!sel.day){sel.day=days.find(d=>freeCount(d)>0)||days[0]}
   $('#days').innerHTML=days.map((d,i)=>{const f=freeCount(d);return `<button type="button" class="chip" data-d="${i}" aria-pressed="${key(d)===key(sel.day)}" ${f?'':'disabled'}><small>${d.toLocaleDateString(loc,{weekday:'short'})}</small>${d.toLocaleDateString(loc,{day:'numeric',month:'short'})}</button>`}).join('');
 }
-function renderHours(){
+function renderHours(){if(!$('#hours'))return;
   $('#hours').innerHTML=GODZINY.map(h=>{const s=hourState(sel.day,h);return `<button type="button" class="chip" data-h="${h}" aria-pressed="${sel.hour===h}" ${s==='free'?'':'disabled'}>${h}<small>${ui(s)}</small></button>`}).join('');
 }
-function renderTypes(){
+function renderTypes(){if(!$('#types'))return;
   $('#types').innerHTML=TYPES[lang].map((t,i)=>`<button type="button" class="chip" data-ty="${i}" aria-pressed="${sel.type===i}">${t}</button>`).join('');
 }
 function dateLabel(){return sel.day.toLocaleDateString(lang==='pl'?'pl-PL':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
 function update(){
   const okForm=$('#fName').value.trim()&&$('#fContact').value.trim()&&$('#fOk').checked;
-  let msg='';
-  if(!sel.hour)msg=ui('pickHour');else if(sel.type===null)msg=ui('pickType');else if(!okForm)msg=ui('fill');
-  else msg=`${dateLabel()}, ${sel.hour} · ${TYPES[lang][sel.type]}`;
-  $('#sumText').textContent=msg;
-  $('#send').disabled=!(sel.hour&&sel.type!==null&&okForm);
+  $('#sumText').textContent=okForm?'':ui('fill');
+  $('#send').disabled=!okForm;
 }
 function messageText(){
-  return (lang==='pl'?`Dzień dobry, chcę zarezerwować termin.\n\nTermin: ${dateLabel()}, ${sel.hour}\nRodzaj: ${TYPES.pl[sel.type]}\nImię: ${$('#fName').value.trim()}\nKontakt: ${$('#fContact').value.trim()}`
-   :`Hi, I'd like to book a session.\n\nDate: ${dateLabel()}, ${sel.hour}\nType: ${TYPES.en[sel.type]}\nName: ${$('#fName').value.trim()}\nContact: ${$('#fContact').value.trim()}`)
+  return (lang==='pl'?`Dzień dobry, mam pytanie o zdjęcia.\n\nImię: ${$('#fName').value.trim()}\nKontakt: ${$('#fContact').value.trim()}`
+   :`Hi, I have a question about photos.\n\nName: ${$('#fName').value.trim()}\nContact: ${$('#fContact').value.trim()}`)
    +($('#fMsg').value.trim()?`\n\n${$('#fMsg').value.trim()}`:'');
 }
 async function send(){
   const st=$('#status'),btn=$('#send');btn.disabled=true;st.className='status show';st.textContent=ui('sending');
   const kontakt=$('#fContact').value.trim();
-  const body={access_key:WEB3FORMS_KEY,subject:`${ui('subj')}: ${key(sel.day)} ${sel.hour}`,from_name:'Strona Artistphoto28',...(kontakt.includes('@')?{replyto:kontakt}:{}),termin:`${key(sel.day)} ${sel.hour}`,rodzaj:TYPES.pl[sel.type],imie:$('#fName').value.trim(),kontakt:$('#fContact').value.trim(),wiadomosc:$('#fMsg').value.trim(),botcheck:document.querySelector('[name=_honey]').value};
+  const body={access_key:WEB3FORMS_KEY,subject:'Zapytanie ze strony Artistphoto28',from_name:'Strona Artistphoto28',...(kontakt.includes('@')?{replyto:kontakt}:{}),imie:$('#fName').value.trim(),kontakt:$('#fContact').value.trim(),wiadomosc:$('#fMsg').value.trim(),botcheck:document.querySelector('[name=_honey]').value};
   try{
     const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body)});
     const j=await r.json().catch(()=>({}));
