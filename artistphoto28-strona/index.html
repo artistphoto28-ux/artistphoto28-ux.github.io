@@ -11,6 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e0f10'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23e5502e' stroke-width='3'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<script>document.documentElement.classList.add('m-wait');setTimeout(()=>document.documentElement.classList.remove('m-wait'),2500)</script>
 <style>
 /* VOICE: nocna scena, pewny siebie, mało słów
    IDEA: kontaktówka fotografa – numerowane kadry na czarnym tle
@@ -111,6 +112,12 @@ label.ok input{width:20px;min-height:20px;margin-top:2px;accent-color:var(--acc)
 .gcal{margin-top:24px;background:#fff;border-radius:8px;overflow:hidden;max-width:1100px}
 .gcal iframe{display:block;width:100%;height:720px;border:0}
 @media(max-width:700px){.gcal iframe{height:980px}}
+.m-wait body{visibility:hidden}
+.m-portfolio .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.m-portfolio .grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pf-only{display:none!important}
+.m-portfolio .pf-only{display:revert!important}
+.m-portfolio .cl-only,.m-portfolio #oferta,.m-portfolio #rezerwacja,.m-portfolio #o-mnie,.m-portfolio #kontakt,.m-portfolio #filters,.m-portfolio footer details{display:none!important}
 
 /* about */
 .about .wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:center}
@@ -150,10 +157,12 @@ footer summary{cursor:pointer}
     <a class="logo" href="#top">Artistphoto28</a>
     <div class="links" id="links">
       <a href="#prace" data-t="navWorks">Prace</a>
-      <a href="#oferta" data-t="navOffer">Oferta</a>
-      <a href="#rezerwacja" data-t="navBook">Rezerwacja</a>
-      <a href="#o-mnie" data-t="navAbout">O mnie</a>
-      <a href="#kontakt" data-t="navContact">Kontakt</a>
+      <a href="#oferta" class="cl-only" data-t="navOffer">Oferta</a>
+      <a href="#rezerwacja" class="cl-only" data-t="navBook">Rezerwacja</a>
+      <a href="#o-mnie" class="cl-only" data-t="navAbout">O mnie</a>
+      <a href="#kontakt" class="cl-only" data-t="navContact">Kontakt</a>
+      <a href="https://www.instagram.com/artistphoto28/" class="pf-only" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/share/19bZvHgBWz/" class="pf-only" target="_blank" rel="noopener">Facebook</a>
     </div>
     <div class="lang" role="group" aria-label="Język / Language">
       <button type="button" data-lang="pl" aria-pressed="true">PL</button>
@@ -166,13 +175,16 @@ footer summary{cursor:pointer}
 <header class="band hero" id="top">
   <div class="wrap">
     <div>
-      <div class="mono" data-t="heroKicker">Koncerty / sesje / podróże · Warszawa</div>
+      <div class="mono pf-only" data-t="pfKicker">Fotografia koncertowa · Warszawa</div>
+      <div class="mono cl-only" data-t="heroKicker">Koncerty / sesje / podróże · Warszawa</div>
       <h1 data-t="heroTitle">Fotografia koncertowa</h1>
-      <p class="lead" data-t="heroLead">Fotografuję artystów na scenie i za nią, sesje portretowe i dla par, auta oraz miasta z podróży. Światło, ruch i atmosfera w jednym kadrze.</p>
+      <p class="lead pf-only" data-t="pfLead">Fotografuję artystów na scenie i za nią. Światło, ruch i atmosfera w jednym kadrze.</p>
+      <p class="lead cl-only" data-t="heroLead">Fotografuję artystów na scenie i za nią, sesje portretowe i dla par, auta oraz miasta z podróży. Światło, ruch i atmosfera w jednym kadrze.</p>
       <div class="mono" data-t="heroArtists">W 2026: Kult, Swae Lee, Peja i ekipa, Joost Klein</div>
       <div class="cta">
         <a class="btn pri" href="#prace" data-t="heroBtn1">Zobacz prace</a>
-        <a class="btn" href="#rezerwacja" data-t="heroBtn2">Zapytaj o sesję lub koncert</a>
+        <a class="btn pf-only" href="https://www.instagram.com/artistphoto28/" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn cl-only" href="#rezerwacja" data-t="heroBtn2">Zapytaj o sesję lub koncert</a>
       </div>
     </div>
     <figure>
@@ -244,6 +256,17 @@ footer summary{cursor:pointer}
     <p style="max-width:60ch;color:#cfcdc8" data-t="contactLead">Odpowiadam najszybciej, jak mogę. W wiadomości podaj datę, miejsce i rodzaj zdjęć, a odeślę wycenę i informację o dostępności.</p>
     <div class="contacts">
       <div><div class="mono">E-mail</div><a href="mailto:artistphoto28@gmail.com">artistphoto28@gmail.com</a></div>
+      <div><div class="mono">Instagram</div><a href="https://www.instagram.com/artistphoto28/" target="_blank" rel="noopener">@artistphoto28</a></div>
+      <div><div class="mono">Facebook</div><a href="https://www.facebook.com/share/19bZvHgBWz/" target="_blank" rel="noopener">Artistphoto28</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="band pf-only" id="social">
+  <div class="wrap">
+    <div class="mono">Social media</div>
+    <h2 data-t="pfSocialTitle">Więcej zdjęć na Instagramie</h2>
+    <div class="contacts">
       <div><div class="mono">Instagram</div><a href="https://www.instagram.com/artistphoto28/" target="_blank" rel="noopener">@artistphoto28</a></div>
       <div><div class="mono">Facebook</div><a href="https://www.facebook.com/share/19bZvHgBWz/" target="_blank" rel="noopener">Artistphoto28</a></div>
     </div>
@@ -352,7 +375,7 @@ const T = {
   heroArtists:'In 2026: Kult, Swae Lee, Peja & crew, Joost Klein',heroBtn1:'See my work',heroBtn2:'Ask about a session or gig',
   worksKicker:'Contact sheet',worksTitle:'Selected work',offerKicker:'Services',offerTitle:'What I can photograph for you',
   offerNote:'Prices are indicative; I give a final quote once we agree the details (time, number of photos, travel).',
-  bookKicker:'Booking',bookTitle:'Pick a day and time',bookLead:'Pick a free slot in the calendar below. The booking goes straight into my calendar and you get a confirmation email. We will agree the place and details afterwards.',gcalLink:'Calendar not showing? Open it in a new window',askTitle:'Concert, festival or a question? Write to me',
+  bookKicker:'Booking',bookTitle:'Pick a day and time',bookLead:'Pick a free slot in the calendar below. The booking goes straight into my calendar and you get a confirmation email. We will agree the place and details afterwards.',gcalLink:'Calendar not showing? Open it in a new window',pfKicker:'Concert photography · Warsaw',pfLead:'I photograph artists on stage and behind it. Light, motion and atmosphere in a single frame.',pfSocialTitle:'More photos on Instagram',askTitle:'Concert, festival or a question? Write to me',
   step1:'1. Day',step2:'2. Time',step3:'3. Session type and your details',phName:'Name',phContact:'Phone or email',phMsg:'Location, number of people, ideas (optional)',
   consent:'I agree to my data being used to reply to this enquiry (details in the footer: Privacy).',sendBtn:'Send enquiry',
   aboutKicker:'About',aboutTitle:'Hi, I’m Wiktor',
@@ -371,7 +394,7 @@ const T = {
    copyBtn:'Copy message',copied:'Copied',mailBtn:'Open in mail app',subj:'Session booking'}}
 };
 const $=s=>document.querySelector(s);
-let showAll=false,lang='pl',cat='all',sel={day:null,hour:null,type:null},list=[],idx=0;
+let MODE='klienci',showAll=false,lang='pl',cat='all',sel={day:null,hour:null,type:null},list=[],idx=0;
 const PL={}; document.querySelectorAll('[data-t]').forEach(e=>PL[e.dataset.t]=e.textContent);
 document.querySelectorAll('[data-ph]').forEach(e=>PL[e.dataset.ph]=e.placeholder);
 const ui=k=>T.ui[lang][k];
@@ -388,8 +411,8 @@ function renderFilters(){
   $('#filters').innerHTML=CATS.map(([k,n])=>`<button type="button" data-c="${k}" aria-pressed="${k===cat}">${n[lang]}</button>`).join('');
 }
 function renderGrid(){
-  list=PHOTOS.filter(p=>cat==='all'||p.c===cat);
-  const LIMIT=16,hidden=!showAll&&list.length>LIMIT;
+  list=MODE==='portfolio'?[...PHOTOS.filter(p=>p.c==='koncerty'),{f:'swae3',c:'koncerty',pl:'Swae Lee · Warszawa, 2026',en:'Swae Lee · Warsaw, 2026'}]:PHOTOS.filter(p=>cat==='all'||p.c===cat);
+  const LIMIT=16,hidden=MODE!=='portfolio'&&!showAll&&list.length>LIMIT;
   $('#more').style.display=hidden?'':'none';
   $('#more').textContent=(lang==='pl'?'Pokaż więcej zdjęć':'Show more photos')+` (${list.length-LIMIT})`;
   $('#grid').innerHTML=(hidden?list.slice(0,LIMIT):list).map((p,i)=>`<button class="tile" type="button" data-i="${i}"><div class="ph"><img src="img/${p.f}-s.webp" alt="${p[lang]}" loading="lazy"></div><div class="cap mono"><span>${p[lang]}</span><span>${String(i+1).padStart(2,'0')}</span></div></button>`).join('');
@@ -479,6 +502,12 @@ document.addEventListener('keydown',e=>{if(!$('#lb').classList.contains('open'))
 ['#fName','#fContact','#fMsg','#fOk'].forEach(s=>$(s).addEventListener('input',update));
 $('#fOk').addEventListener('change',update);
 applyLang();
+// Tryb strony: plik tryb.txt w repozytorium ("klienci" albo "portfolio"). Podgląd: ?tryb=portfolio
+const MODE_URL='https://raw.githubusercontent.com/artistphoto28-ux/artistphoto28-ux.github.io/main/tryb.txt';
+const setMode=m=>{MODE=m==='portfolio'?'portfolio':'klienci';document.documentElement.classList.toggle('m-portfolio',MODE==='portfolio');document.documentElement.classList.remove('m-wait');renderGrid()};
+const qMode=new URLSearchParams(location.search).get('tryb');
+if(qMode)setMode(qMode);
+else fetch(MODE_URL+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'klienci').then(x=>setMode(x.trim().toLowerCase())).catch(()=>setMode('klienci'));
 }
 </script>
 </body>
