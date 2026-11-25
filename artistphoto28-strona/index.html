@@ -507,7 +507,9 @@ const MODE_URL='https://raw.githubusercontent.com/artistphoto28-ux/artistphoto28
 const setMode=m=>{MODE=m==='portfolio'?'portfolio':'klienci';document.documentElement.classList.toggle('m-portfolio',MODE==='portfolio');document.documentElement.classList.remove('m-wait');renderGrid()};
 const qMode=new URLSearchParams(location.search).get('tryb');
 if(qMode)setMode(qMode);
-else fetch(MODE_URL+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'klienci').then(x=>setMode(x.trim().toLowerCase())).catch(()=>setMode('klienci'));
+else{const get=(u,h)=>fetch(u,{cache:'no-store',headers:h||{}}).then(r=>{if(!r.ok)throw 0;return r.text()});
+  get('https://api.github.com/repos/artistphoto28-ux/artistphoto28-ux.github.io/contents/tryb.txt',{Accept:'application/vnd.github.raw'})
+  .catch(()=>get(MODE_URL+'?t='+Date.now())).then(x=>setMode(x.trim().toLowerCase())).catch(()=>setMode('klienci'));}
 }
 </script>
 </body>
