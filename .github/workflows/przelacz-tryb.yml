@@ -1,0 +1,36 @@
+name: Przełącz tryb strony
+on:
+  workflow_dispatch:
+    inputs:
+      tryb:
+        description: 'Tryb strony'
+        required: true
+        default: 'przełącz'
+        type: choice
+        options:
+          - 'przełącz'
+          - 'klienci'
+          - 'portfolio'
+permissions:
+  contents: write
+jobs:
+  przelacz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Zmień tryb
+        run: |
+          OBECNY=$(tr -d '[:space:]' < tryb.txt 2>/dev/null || echo klienci)
+          WYBOR="${{ inputs.tryb }}"
+          if [ "$WYBOR" = "przełącz" ]; then
+            if [ "$OBECNY" = "portfolio" ]; then NOWY=klienci; else NOWY=portfolio; fi
+          else
+            NOWY="$WYBOR"
+          fi
+          echo "$NOWY" > tryb.txt
+          echo "## Tryb strony: $NOWY" >> "$GITHUB_STEP_SUMMARY"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tryb.txt
+          git commit -m "Tryb strony: $NOWY" || echo "bez zmian"
+          git push
